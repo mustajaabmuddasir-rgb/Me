@@ -1,5 +1,6 @@
 import streamlit as st
 import math as mt
+import re
 
 st.markdown("""
 <style>
@@ -160,6 +161,7 @@ with st.sidebar:
     option = st.selectbox(
         "🧩 Choose a Shape",
         [
+            "🧮 Calculator",
             "⚪ Circle",
             "▭ Rectangle",
             "🟨 Square",
@@ -185,7 +187,7 @@ with st.sidebar:
 
     st.caption("Made with ❤️ using Streamlit")
 
-st.subheader(f"{option} Calculator")
+st.subheader(f"{option}")
 
 if option == "⚪ Circle":
     radius = st.number_input("Enter radius", min_value=0.0, value=0.0, step=0.1)
@@ -261,3 +263,35 @@ elif option == "💎 Rhombus":
 
     st.success(f"Area: {area:.2f}")
     st.success(f"Perimeter: {perimeter:.2f}")
+
+elif option == "🧮 Calculator":
+
+    st.subheader("Calculate any thing you want.")
+
+    expression = st.text_input(
+        "Enter your calculation",
+        placeholder="Examples: 1(2), 2(3+4), (5+1)2, 10+5*3"
+    )
+
+    if st.button("Calculate"):
+        try:
+            allowed = "0123456789+-*/().% "
+
+            if all(char in allowed for char in expression):
+
+                # Convert implicit multiplication
+                expression = re.sub(r'(\d)\(', r'\1*(', expression)
+                expression = re.sub(r'\)(\d)', r')*\1', expression)
+                expression = re.sub(r'\)\(', r')*(', expression)
+
+                result = eval(expression, {"__builtins__": None}, {})
+
+                st.success(f"✅ Answer: {result}")
+            else:
+                st.error("❌ Invalid characters entered.")
+
+        except ZeroDivisionError:
+            st.error("❌ Cannot divide by zero.")
+
+        except Exception:
+            st.error("❌ Invalid expression.")
