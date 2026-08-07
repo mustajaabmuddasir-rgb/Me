@@ -2,6 +2,8 @@ import streamlit as st
 import math as mt
 import re
 
+st.set_page_config(page_title="Shape Calculator", page_icon="📐")
+
 st.markdown("""
 <style>
 
@@ -139,8 +141,6 @@ div[data-testid="stAlert"] *{
 """, unsafe_allow_html=True)
 
 pi = mt.pi  # More accurate than 22/7
-
-st.set_page_config(page_title="Shape Calculator", page_icon="📐")
 
 st.title("📐 Shape Calculator")
 
